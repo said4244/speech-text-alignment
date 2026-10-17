@@ -1,39 +1,66 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Speech Streaming and Text Alignment
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+I built this experiment to synchronize generated speech with visible text in Flutter. A LiveKit agent handles the conversation, while an ElevenLabs streaming relay sends audio and character timing data for highlighting.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+**Built with:** Flutter, Dart, Python, FastAPI, WebSockets, LiveKit, OpenAI, ElevenLabs.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## What it does
 
-## Features
+- Stream generated speech to a Flutter client.
+- Highlight text using character-alignment events.
+- Coordinate microphone input and assistant speech.
+- Inspect alignment output while developing the audio flow.
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+## Run locally
 
-## Getting started
+Install Flutter with Dart 3 and Python 3.10 or newer. From `server/`:
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```bash
+python -m venv .venv
 ```
 
-## Additional information
+Activate the environment with `.venv\Scripts\Activate.ps1` in PowerShell or
+`source .venv/bin/activate` on macOS/Linux, then install dependencies:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```bash
+python -m pip install -r requirements.txt
+```
+
+Keep real credentials in your local `.env`, which is ignored by Git. Copy the
+provided `.env.example` into that directory as `.env` and fill in your own values. Set OpenAI, LiveKit, ElevenLabs, voice, and model values.
+
+```bash
+# Terminal 1, from server/
+python tokenserver.py
+```
+
+```bash
+# Terminal 2, from server/
+python ws_server.py
+```
+
+From the repository root, in another terminal:
+
+```bash
+cd example
+flutter pub get
+flutter run -d chrome
+```
+
+The token endpoint starts `agent_direct.py`; the WebSocket relay listens on port 8081.
+
+## Project layout
+
+| Path | Purpose |
+| --- | --- |
+| `lib/src/` | Connection, streaming audio, and text highlighting |
+| `example/` | Flutter voice and alignment demo |
+| `server/tokenserver.py` | LiveKit tokens and agent startup |
+| `server/agent_direct.py` | Conversation worker |
+| `server/ws_server.py` | Speech WebSocket relay |
+| `server/tts_streamer.py` | ElevenLabs streaming client |
+| `docs/FIX_OVERLAPPING_AUDIO.md` | Audio synchronization notes |
+
+## Backend details
+
+See [server/README.md](server/README.md) for the local services and endpoints.

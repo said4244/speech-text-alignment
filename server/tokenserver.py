@@ -1,3 +1,5 @@
+from pathlib import Path
+import sys
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from livekit import api
@@ -90,17 +92,11 @@ async def start_new_agent(room_name: str):
     except Exception as e:
         logger.error(f"Error handling PID file: {e}")
 
-    # Start new streaming agent with room name in new terminal
-    # Uses agent_streaming.py which streams LLM responses to ws_server.py for TTS
-    cmd = (
-        f'start powershell.exe -NoExit -Command "'
-        f'./venv/Scripts/activate; '
-        f'python -u agent_direct.py connect --room {room_name}"'
-    )
-    
+    # Launch without a shell so room names remain arguments, never shell code.
     current_agent_process = subprocess.Popen(
-        cmd,
-        shell=True
+        [sys.executable, "-u", str(Path(__file__).with_name("agent_direct.py")),
+         "connect", "--room", room_name],
+        cwd=str(Path(__file__).resolve().parent),
     )
     current_room_name = room_name
     

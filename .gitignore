@@ -29,3 +29,34 @@ pubspec.lock
 # OS
 .DS_Store
 Thumbs.db
+
+# Local credentials and machine-specific configuration
+.env.*
+!.env.example
+!.env.*.example
+!.env.template
+!.example.env
+env.list
+*.login
+
+# Generated environments, caches, and runtime output
+.venv/
+*.py[cod]
+*.pid
+counter.txt
+counter.db
+counter.db-*
+exports/
+
+# Flutter and Node build output
+.pub-cache/
+.pub/
+node_modules/
+.next/
+coverage/
+
+# Local credentials and machine-specific configuration
+
+# Generated environments, caches, and runtime output
+
+# Flutter and Node build output

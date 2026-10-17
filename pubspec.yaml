@@ -1,7 +1,7 @@
 name: elevenlabs_phonemes
 description: A simple Flutter package for voice assistants using ElevenLabs and phoneme visualization
 version: 0.0.1
-homepage: https://github.com/yourusername/elevenlabs_phonemes
+homepage: https://github.com/said4244/elevenlabs_phonemes
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
